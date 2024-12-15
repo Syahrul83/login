@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     networks:
-        - docker-network
+      - docker-network
     ports:
       - 9000:9000
     depends_on:
@@ -65,6 +65,21 @@ services:
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     networks:
       - docker-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: unless-stopped
+    ports:
+      - 8080:80  # Expose phpMyAdmin on port 8080
+    environment:
+      - PMA_HOST=db  # Set the host to the db service (MySQL)
+      - PMA_PORT=3306  # Default MySQL port
+      # - PMA_USER=${DB_USERNAME}  # Use the DB username from environment
+      # - PMA_PASSWORD=${DB_PASSWORD}  # Use the DB password from environment
+    networks:
+      - docker-network
+    depends_on:
+      - db
 
 volumes:
   db-data:
